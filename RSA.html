@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Algorithm Visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Existing CSS styles */
+        body {
+            background: rgb(154, 157, 172);
+            background: linear-gradient(90deg, rgba(154, 157, 172, 1) 0%, rgba(41, 37, 46, 1) 27%, rgba(14, 16, 62, 1) 81%, rgba(187, 154, 212, 1) 100%);
+        }
+
+        .paragraph img,
+        .paragraph h1 {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0;
+        }
+
+        h1 {
+            margin-top: 0px;
+            margin-left: 5px;
+            /* Adjust as needed */
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .row {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .messageLabel {
+            width: 200px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .messageField {
+            flex: 1;
+        }
+
+        input[type="number"] {
+            width: 90%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .submit input[type="button"] {
+            background-color: #0d8af0;
+            color: white;
+            /* margin-left: 30px; */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            width: 80%;
+            margin: 20px auto;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit input[type="button"]:hover {
+            background-color: #1d5a62;
+        }
+
+        label {
+            width: 100%;
+        }
+
+        .messageBox {
+            width: calc(50% - 20px);
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            overflow: hidden;
+            word-wrap: break-word;
+            padding: 16px;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+        .messagebox2 {
+            width: calc(100% - 20px);
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            overflow: hidden;
+            word-wrap: break-word;
+            padding: 16px;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .messageBox::after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid #ccc;
+        }
+
+        .fa-arrow-right {
+            font-size: 40px;
+            color: #666;
+        }
+
+        .fa-arrow-right:hover {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .messageBox {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>RSA Algorithm</h1>
+        <div class="row">
+            <div class="messageLabel">
+                <label>Enter length of prime number p:</label>
+            </div>
+            <div class="messageField">
+                <input type="number" id="pLength" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="messageLabel">
+                <label>Enter length of prime number q:</label>
+            </div>
+            <div class="messageField">
+                <input type="number" id="qLength" />
+            </div>
+        </div>
+        <div class="submit">
+            <input type="button" class="btn" value="Generate Prime Numbers" onclick="generatePrimeNumbers()" />
+        </div>
+        <div class="row">
+            <div class="messageLabel">
+                <label>Generated prime number p:</label>
+            </div>
+            <div class="messageField">
+                <input type="number" id="p" readonly />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="messageLabel">
+                <label>Generated prime number q:</label>
+            </div>
+            <div class="messageField">
+                <input type="number" id="q" readonly />
+            </div>
+        </div>
+        <div class="row">
+            <div class="messageLabel">
+                <label>Enter message to be encrypted:</label>
+            </div>
+            <div class="messageField">
+                <input type="number" id="message" />
+            </div>
+        </div>
+        <div class="submit">
+            <input type="button" class="btn" value="Submit" onclick="calculateE()" />
+        </div>
+        <div class="row">
+            <div><!--class = "messageLabel"-->
+                <label>Choose e such that 1 < e < φ(n) and e and φ (n) are coprime: </label>
+            </div>
+            <div class="messageField">
+                <select id="e"></select>
+            </div>
+
+        </div>
+        <div class="submit">
+            <input type="button" class="btn" value="Start Simulation" onclick="runRSA()" />
+        </div>
+        <p class="paragraph"> <img src="lock.png" height="40px" alt="" style="position: relative;top:50px;left: 220px;">
+        <h1>Encryption Phase:</h1>
+        </p>
+        <div class="row">
+
+            <div class="messageBox" id="step1">
+
+                <div class="static-data">
+                    <span>p = </span><br>
+                    <span>q = </span>
+                </div>
+                <div class="dynamic-data">
+                    <label id="pValue"></label><br>
+                    <label id="qValue"></label>
+                </div>
+            </div>
+            <div class="col">
+                <i class="fa-solid fa-arrow-right" style="font-size: 40px;"></i>
+            </div>
+            <div class="messageBox" id="step2">
+                <div class="static-data">
+                    <span>n = p * q = </span>
+                </div>
+                <div class="dynamic-data">
+                    <label id="nValue"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="messageBox" id="step3">
+                <div class="static-data">
+                    <span>φ(n) = (p - 1) * (q - 1) = </span>
+                </div>
+                <div class="dynamic-data">
+                    <label id="phiValue"></label>
+                </div>
+            </div>
+
+            <div class="col">
+                <i class="fa-solid fa-arrow-right" style="font-size: 40px;"></i>
+            </div>
+            <div class="messageBox" id="step4">
+                <div class="static-data">
+                    <span>Public Key = (e, n)</span><br>
+                    <span>e = </span><br>
+                    <span>n = </span>
+                </div>
+                <div class="dynamic-data">
+                    <label id="eValue"></label><br>
+                    <label id="nValue2"></label>
+                </div>
+            </div>
+        </div>
+        <p class="paragraph"> <img src="unlock.png" height="40px" alt=""
+                style="position: relative;top:50px;left: 220px;">
+        <h1>Decryption Phase:</h1>
+        </p>
+        <div class="row">
+            <div class="messageBox" id="step5">
+                <div class="static-data">
+                    <span>d = ModInverse(e, φ(n))</span><br>
+                    <span>d = </span>
+                </div>
+                <div class="dynamic-data">
+                    <label id="dValue"></label>
+                </div>
+            </div>
+            <div class="col">
+                <i class="fa-solid fa-arrow-right" style="font-size: 40px;"></i>
+            </div>
+            <div class="messageBox" id="step6">
+                <div class="static-data">
+                    <span>Private Key = (d, n)</span><br>
+                    <span>d = </span><br>
+                    <span>n = </span>
+                </div>
+                <div class="dynamic-data">
+                    <label id="dValue2"></label><br>
+                    <label id="nValue3"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="messageBox" id="step7">
+                <div class="static-data">
+                    <span>Message = </span>
+                </div>
+                <div class="dynamic-data">
+                    <label id="messageValue"></label>
+                </div>
+            </div>
+            <div class="col">
+                <i class="fa-solid fa-arrow-right" style="font-size: 40px;"></i>
+            </div>
+            <div class="messageBox" id="step8">
+                <div class="static-data">
+                    <span>Cipher = Message^e mod n</span><br>
+                    <span>Cipher = </span>
+                </div>
+                <div class="dynamic-data">
+                    <label id="cipherValue"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="messageBox" id="step9">
+                <div class="static-data">
+                    <span>Decrypted Message = Cipher^d mod n</span><br>
+                    <span>Decrypted Message = </span>
+                </div>
+                <div class="dynamic-data">
+                    <label id="decryptedValue"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input type="button" class="btn" value="Previous" onclick="prevStep()" />
+            </div>
+            <div class="col">
+                <input type="button" class="btn" value="Next" onclick="nextStep()" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="messagebox2" id="step10">
+                <div class="static-data">
+                    <span>Estimated time required to crack RSA:</span><br>
+                    <span id="crackTime"></span>
+                </div>
+            </div>
+        </div>
+
+       
+    </div>
+</div>
+
+
+    <script>
+        // Existing JavaScript code
+        document.querySelectorAll('.dynamic-data').forEach(element => {
+            element.style.display = 'none';
+        });
+        let currentStep = 1;
+
+        function calculateE() {
+            const p = parseInt(document.getElementById("p").value);
+            const q = parseInt(document.getElementById("q").value);
+
+            if (!isPrime(p) || !isPrime(q)) {
+                alert("Both p and q must be prime numbers.");
+                return;
+            }
+            const phi = (p - 1) * (q - 1);
+            const eSelect = document.getElementById("e");
+
+
+            for (let e = 2; e < phi; e++) {
+                if (gcd(e, phi) === 1) {
+                    const option = document.createElement("option");
+                    option.text = e;
+                    option.value = e;
+                    eSelect.add(option);
+                }
+                if (eSelect.options.length >= 20000) break;
+            }
+        }
+
+        function isPrime(num) {
+            if (num <= 1) return false;
+            if (num <= 3) return true;
+            if (num % 2 == 0 || num % 3 == 0) return false;
+
+            for (let i = 5; i * i <= num; i += 6) {
+                if (num % i == 0 || num % (i + 2) == 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function gcd(a, b) {
+            if (b === 0) {
+                return a;
+            }
+            return gcd(b, a % b);
+        }
+
+        function runRSA() {
+            const p = parseInt(document.getElementById("p").value);
+            const q = parseInt(document.getElementById("q").value);
+            const message = parseInt(document.getElementById("message").value);
+            const e = parseInt(document.getElementById("e").value);
+
+            if (!isPrime(p) || !isPrime(q)) {
+                alert("Both p and q must be prime numbers.");
+                return;
+            }
+
+            //new
+            // const pLength = p.toString().length;
+            // const qLength = q.toString().length;
+            // fetch(`/calculate_crack_time/${pLength}/${qLength}/${e}`)
+            //     .then(response => response.text())
+            //     .then(crackTime => {
+            //         document.getElementById('crackTime').textContent = `Estimated time required to crack RSA: ${crackTime} years`;
+            //     })
+            //     .catch(error => console.error(error));
+            //end new
+
+
+            const n = p * q;
+            const phi = (p - 1) * (q - 1);
+            const d = modInverse(e, phi);
+
+            const publicKey = [e, n];
+            const privateKey = [d, n];
+
+            const cipher = modPow(BigInt(message), BigInt(e), BigInt(n));
+            const decryptedMessage = modPow(BigInt(cipher), BigInt(d), BigInt(n));
+
+            document.getElementById("pValue").textContent = p;
+            document.getElementById("qValue").textContent = q;
+            document.getElementById("nValue").textContent = n;
+            document.getElementById("phiValue").textContent = phi;
+            document.getElementById("eValue").textContent = e;
+            document.getElementById("nValue2").textContent = n;
+            document.getElementById("dValue").textContent = d;
+            document.getElementById("dValue2").textContent = d;
+            document.getElementById("nValue3").textContent = n;
+            document.getElementById("messageValue").textContent = message;
+            document.getElementById("cipherValue").textContent = cipher;
+            document.getElementById("decryptedValue").textContent = decryptedMessage;
+
+            const bitLength = n.toString(2).length;
+            const estimatedTimeOutput = estimateTimeTocrack(bitLength);
+            const crackTimeElement = document.getElementById("crackTime");
+            crackTimeElement.innerHTML = estimatedTimeOutput;
+
+            highlightStep(1);
+        }
+
+        function modInverse(a, m) {
+            let m0 = m;
+            let y = 0, x = 1;
+
+            if (m == 1) return 0;
+
+            while (a > 1) {
+                let q = Math.floor(a / m);
+                let t = m;
+
+                m = a % m;
+                a = t;
+                t = y;
+
+                y = x - q * y;
+                x = t;
+            }
+
+            if (x < 0) x += m0;
+
+            return x;
+        }
+
+        function modPow(base, exponent, modulus) {
+            if (modulus === 1n) return 0n;
+            base = base % modulus;
+            let result = 1n;
+            while (exponent > 0n) {
+                if (exponent % 2n === 1n) {
+                    result = (result * base) % modulus;
+                }
+                exponent = exponent / 2n;
+                base = (base * base) % modulus;
+            }
+            return result;
+        }
+        function highlightStep(step) {
+            const steps = document.querySelectorAll(".messageBox");
+            const dynamicData = document.querySelectorAll(".dynamic-data");
+
+            dynamicData.forEach(data => {
+                const parentStep = parseInt(data.parentElement.id.replace('step', ''));
+                if (parentStep <= step) {
+                    data.style.display = "block";
+                } else {
+                    data.style.display = "none";
+                }
+            });
+
+            steps.forEach((box, index) => {
+                if (index + 1 === step) {
+                    box.style.border = "5px solid red";
+                } else {
+                    box.style.border = "1px solid #ccc";
+                }
+            });
+
+            currentStep = step;
+        }
+
+
+        function nextStep() {
+            if (currentStep < 9) {
+                highlightStep(currentStep + 1);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                highlightStep(currentStep - 1);
+            }
+        }
+        function generatePrimeNumbers() {
+            const pLength = parseInt(document.getElementById("pLength").value);
+            const qLength = parseInt(document.getElementById("qLength").value);
+
+            if (isNaN(pLength) || isNaN(qLength) || pLength <= 0 || qLength <= 0) {
+                alert("Please enter valid positive integer values for the length of prime numbers p and q.");
+                return;
+            }
+
+            const p = generatePrime(pLength);
+            const q = generatePrime(qLength);
+
+            document.getElementById("p").value = p;
+            document.getElementById("q").value = q;
+        }
+
+        function generatePrime(length) {
+            const min = Math.pow(10, length - 1);
+            const max = Math.pow(10, length) - 1;
+            let prime;
+
+            while (!prime) {
+                const candidate = Math.floor(Math.random() * (max - min + 1)) + min;
+                if (isPrime(candidate)) {
+                    prime = candidate;
+                }
+            }
+
+            return prime;
+        }
+
+
+
+        
+        function estimateTimeTocrack(bitLength) {
+    const secondsPerYear = 31536000;
+    const computersPerClusterYear = 1e3; // 1 trillion computers per cluster-year
+    const keysPerComputerYear = 1e5; // 100 trillion keys per computer-year
+
+    const totalKeys = Math.pow(2, bitLength);
+    const clusterYears = totalKeys / (computersPerClusterYear * keysPerComputerYear);
+    const keysPerSecond = computersPerClusterYear * keysPerComputerYear / secondsPerYear;
+    const timeTocrack = totalKeys / keysPerSecond;
+
+    let output = `<p>Assumptions:</p>
+    <ul>
+        <li>Number of computers per cluster-year: ${computersPerClusterYear.toExponential(2)}</li>
+        <li>Number of keys checked per computer-year: ${keysPerComputerYear.toExponential(2)}</li>
+    </ul>
+    <p>Calculations:</p>
+    <ul>
+        <li>Bit length of the modulus (n): ${bitLength}</li>
+        <li>Total number of possible keys: ${totalKeys.toExponential(2)}</li>
+        <li>Number of cluster-years required: ${clusterYears.toExponential(2)}</li>
+        <li>Number of keys checked per second: ${keysPerSecond.toExponential(2)}</li>
+    </ul>`;
+
+    if (timeTocrack < 1e-6) {
+        output += `<p>Estimated time required to crack RSA:</p>
+        <ul>
+            <b>
+            <li>Extremely small (less than a microsecond)</li>
+        </b></ul>
+        <p>Explanation:</p>
+        <p>The estimated time to crack the RSA encryption with the given parameters is extremely small (less than a microsecond). This means that the RSA encryption is not secure for these parameters, and the private key can be easily cracked.</p>
+        <p>It is recommended to use longer prime numbers (p and q) to increase the bit length of the modulus (n) and make the RSA encryption more secure.</p>`;
+    } else if (timeTocrack < 1) {
+        output += `<p>Estimated time required to crack RSA:</p>
+        <ul>
+            <b>
+            <li>${(timeTocrack * 1000).toFixed(2)} milliseconds</li>
+        </b></ul>
+        <p>Explanation:</p>
+        <p>The estimated time to crack the RSA encryption is calculated by dividing the total number of possible keys by the rate at which keys can be checked (keys per second).</p>
+        <p>For small values of the bit length of the modulus (n), the total number of possible keys is relatively small, and the estimated time to crack RSA is less than 1 second.</p>`;
+    } else {
+        const years = Math.floor(timeTocrack / secondsPerYear);
+        const days = Math.floor((timeTocrack % secondsPerYear) / 86400);
+        const hours = Math.floor(((timeTocrack % secondsPerYear) % 86400) / 3600);
+        const minutes = Math.floor((((timeTocrack % secondsPerYear) % 86400) % 3600) / 60);
+        const seconds = Math.floor((((timeTocrack % secondsPerYear) % 86400) % 3600) % 60);
+
+        output += `<p>Estimated time required to crack RSA:</p>
+        <ul>
+            <b>
+            <li>${years} years, ${days} days, ${hours} hours, ${minutes} minutes, ${seconds.toFixed(2)} seconds</li>
+        </b></ul>
+        <p>Explanation:</p>
+        <p>The estimated time to crack the RSA encryption is calculated by dividing the total number of possible keys by the rate at which keys can be checked (keys per second).</p>
+        <p>The total number of possible keys is 2^${bitLength}, which is ${totalKeys.toExponential(2)}.</p>
+        <p>The number of cluster-years required is calculated by dividing the total number of possible keys by the total computational power available (${computersPerClusterYear.toExponential(2)} computers per cluster-year, each checking ${keysPerComputerYear.toExponential(2)} keys per year).</p>
+        <p>The number of keys checked per second is calculated by taking the total computational power available and dividing it by the number of seconds per year.</p>
+        <p>Finally, the estimated time to crack is calculated by dividing the total number of possible keys by the number of keys checked per second.</p>`;
+    }
+
+    return output;
+}
+
+    </script>
+</body>
+
+</html>
