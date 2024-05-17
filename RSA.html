@@ -9,7 +9,6 @@
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* Existing CSS styles */
         body {
             background: rgb(154, 157, 172);
             background: linear-gradient(90deg, rgba(154, 157, 172, 1) 0%, rgba(41, 37, 46, 1) 27%, rgba(14, 16, 62, 1) 81%, rgba(187, 154, 212, 1) 100%);
@@ -99,6 +98,7 @@
             position: relative;
             transition: all 0.3s ease-in-out;
         }
+
         .messagebox2 {
             width: calc(100% - 20px);
             height: auto;
@@ -194,7 +194,7 @@
             <input type="button" class="btn" value="Submit" onclick="calculateE()" />
         </div>
         <div class="row">
-            <div><!--class = "messageLabel"-->
+            <div>
                 <label>Choose e such that 1 < e < φ(n) and e and φ (n) are coprime: </label>
             </div>
             <div class="messageField">
@@ -341,13 +341,13 @@
             </div>
         </div>
 
-       
+
     </div>
-</div>
+    </div>
 
 
     <script>
-        // Existing JavaScript code
+
         document.querySelectorAll('.dynamic-data').forEach(element => {
             element.style.display = 'none';
         });
@@ -408,7 +408,7 @@
                 return;
             }
 
-            //new
+            //
             // const pLength = p.toString().length;
             // const qLength = q.toString().length;
             // fetch(`/calculate_crack_time/${pLength}/${qLength}/${e}`)
@@ -417,7 +417,7 @@
             //         document.getElementById('crackTime').textContent = `Estimated time required to crack RSA: ${crackTime} years`;
             //     })
             //     .catch(error => console.error(error));
-            //end new
+            //
 
 
             const n = p * q;
@@ -556,18 +556,18 @@
 
 
 
-        
+
         function estimateTimeTocrack(bitLength) {
-    const secondsPerYear = 31536000;
-    const computersPerClusterYear = 1e3; // 1 trillion computers per cluster-year
-    const keysPerComputerYear = 1e5; // 100 trillion keys per computer-year
+            const secondsPerYear = 31536000;
+            const computersPerClusterYear = 1e3; // 1 trillion computers per cluster-year
+            const keysPerComputerYear = 1e5; // 100 trillion keys per computer-year
 
-    const totalKeys = Math.pow(2, bitLength);
-    const clusterYears = totalKeys / (computersPerClusterYear * keysPerComputerYear);
-    const keysPerSecond = computersPerClusterYear * keysPerComputerYear / secondsPerYear;
-    const timeTocrack = totalKeys / keysPerSecond;
+            const totalKeys = Math.pow(2, bitLength);
+            const clusterYears = totalKeys / (computersPerClusterYear * keysPerComputerYear);
+            const keysPerSecond = computersPerClusterYear * keysPerComputerYear / secondsPerYear;
+            const timeTocrack = totalKeys / keysPerSecond;
 
-    let output = `<p>Assumptions:</p>
+            let output = `<p>Assumptions:</p>
     <ul>
         <li>Number of computers per cluster-year: ${computersPerClusterYear.toExponential(2)}</li>
         <li>Number of keys checked per computer-year: ${keysPerComputerYear.toExponential(2)}</li>
@@ -580,8 +580,8 @@
         <li>Number of keys checked per second: ${keysPerSecond.toExponential(2)}</li>
     </ul>`;
 
-    if (timeTocrack < 1e-6) {
-        output += `<p>Estimated time required to crack RSA:</p>
+            if (timeTocrack < 1e-6) {
+                output += `<p>Estimated time required to crack RSA:</p>
         <ul>
             <b>
             <li>Extremely small (less than a microsecond)</li>
@@ -589,8 +589,8 @@
         <p>Explanation:</p>
         <p>The estimated time to crack the RSA encryption with the given parameters is extremely small (less than a microsecond). This means that the RSA encryption is not secure for these parameters, and the private key can be easily cracked.</p>
         <p>It is recommended to use longer prime numbers (p and q) to increase the bit length of the modulus (n) and make the RSA encryption more secure.</p>`;
-    } else if (timeTocrack < 1) {
-        output += `<p>Estimated time required to crack RSA:</p>
+            } else if (timeTocrack < 1) {
+                output += `<p>Estimated time required to crack RSA:</p>
         <ul>
             <b>
             <li>${(timeTocrack * 1000).toFixed(2)} milliseconds</li>
@@ -598,14 +598,14 @@
         <p>Explanation:</p>
         <p>The estimated time to crack the RSA encryption is calculated by dividing the total number of possible keys by the rate at which keys can be checked (keys per second).</p>
         <p>For small values of the bit length of the modulus (n), the total number of possible keys is relatively small, and the estimated time to crack RSA is less than 1 second.</p>`;
-    } else {
-        const years = Math.floor(timeTocrack / secondsPerYear);
-        const days = Math.floor((timeTocrack % secondsPerYear) / 86400);
-        const hours = Math.floor(((timeTocrack % secondsPerYear) % 86400) / 3600);
-        const minutes = Math.floor((((timeTocrack % secondsPerYear) % 86400) % 3600) / 60);
-        const seconds = Math.floor((((timeTocrack % secondsPerYear) % 86400) % 3600) % 60);
+            } else {
+                const years = Math.floor(timeTocrack / secondsPerYear);
+                const days = Math.floor((timeTocrack % secondsPerYear) / 86400);
+                const hours = Math.floor(((timeTocrack % secondsPerYear) % 86400) / 3600);
+                const minutes = Math.floor((((timeTocrack % secondsPerYear) % 86400) % 3600) / 60);
+                const seconds = Math.floor((((timeTocrack % secondsPerYear) % 86400) % 3600) % 60);
 
-        output += `<p>Estimated time required to crack RSA:</p>
+                output += `<p>Estimated time required to crack RSA:</p>
         <ul>
             <b>
             <li>${years} years, ${days} days, ${hours} hours, ${minutes} minutes, ${seconds.toFixed(2)} seconds</li>
@@ -616,10 +616,10 @@
         <p>The number of cluster-years required is calculated by dividing the total number of possible keys by the total computational power available (${computersPerClusterYear.toExponential(2)} computers per cluster-year, each checking ${keysPerComputerYear.toExponential(2)} keys per year).</p>
         <p>The number of keys checked per second is calculated by taking the total computational power available and dividing it by the number of seconds per year.</p>
         <p>Finally, the estimated time to crack is calculated by dividing the total number of possible keys by the number of keys checked per second.</p>`;
-    }
+            }
 
-    return output;
-}
+            return output;
+        }
 
     </script>
 </body>

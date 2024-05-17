@@ -61,9 +61,9 @@
     height: 210px;
     width: 1px;
     background-color: black;
-    left: calc(830px - 5px); /* Adjust this value to position the line */
+    left: calc(830px - 5px); 
     top: 15px;
-    border-left: 1px dotted black; /* Use dotted border to make it outside the box */
+    border-left: 1px dotted black; 
     z-index: 2;
 }
 .verticalLine2 {
@@ -71,9 +71,9 @@
     height: 210px;
     width: 1px;
     background-color: black;
-    left: calc(830px - 5px); /* Adjust this value to position the line */
+    left: calc(830px - 5px); 
     top: 365px;
-    border-left: 1px dotted black; /* Use dotted border to make it outside the box */
+    border-left: 1px dotted black; 
     z-index: 2;
 }
 
@@ -345,7 +345,7 @@
   const keyBuffer = new TextEncoder().encode(key);
   const messageBuffer = new TextEncoder().encode(message);
 
-  // Import key
+  // Importing key
   const importedKey = await crypto.subtle.importKey(
     'raw', 
     keyBuffer, 
