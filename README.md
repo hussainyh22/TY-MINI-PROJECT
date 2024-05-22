@@ -4,7 +4,8 @@ An intuitive web application that brings cryptographic algorithms to life throug
 **Key Features:**
 
 **Interactive Visualizations:** Step-by-step visualizations for algorithms like RSA, Caesar Cipher, MAC, and Vigenère Cipher, allowing users to grasp complex concepts through engaging animations.
-Customizable Parameters: Ability to input custom values for plaintext, keys, and other parameters, enabling experimentation and observation of real-time effects.
+
+**Customizable Parameters:** Ability to input custom values for plaintext, keys, and other parameters, enabling experimentation and observation of real-time effects.
 
 **Educational Resources:** Comprehensive explanations, security considerations, and practical applications accompanying each algorithm, providing a holistic learning experience.
 
